@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\PermutationType.cs" />
+    <Compile Include="Factories\AlgorithmPermutationFactory.cs" />
     <Compile Include="Factories\GraphFactory.cs" />
     <Compile Include="Helpers\PermutationAlgorithmsHelper.cs" />
     <Compile Include="Helpers\PaintHelper.cs" />
