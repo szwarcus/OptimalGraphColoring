@@ -28,12 +28,12 @@ namespace GraphColoring
             var usedColors5 = AlgorithmPermutationFactory.GetUsedColorsByPermutation(PermutationType.ColorsCountColoredNeibourNeighborCount, edges, _vertexCount);
             var usedColors6 = AlgorithmPermutationFactory.GetUsedColorsByPermutation(PermutationType.ColorsCountNeighborCountColoredNeibour, edges, _vertexCount);
 
-            Console.WriteLine($"NeighborCountColoredNeibourColorsCount - Uzyte kolory: {usedColors}\n");
-            Console.WriteLine($"NeighborCountColorsCountColoredNeibour - Uzyte kolory: {usedColors2}\n");
-            Console.WriteLine($"ColoredNeibourNeighborCountColorsCount - Uzyte kolory: {usedColors3}\n");
-            Console.WriteLine($"ColoredNeibourColorsCountNeighborCount - Uzyte kolory: {usedColors4}\n");
-            Console.WriteLine($"ColorsCountColoredNeibourNeighborCount - Uzyte kolory: {usedColors5}\n");
-            Console.WriteLine($"ColorsCountNeighborCountColoredNeibour - Uzyte kolory: {usedColors6}\n");
+            Console.WriteLine($"NeighborCountColoredNeibourColorsCount - Uzyte kolory: {usedColors}");
+            Console.WriteLine($"NeighborCountColorsCountColoredNeibour - Uzyte kolory: {usedColors2}");
+            Console.WriteLine($"ColoredNeibourNeighborCountColorsCount - Uzyte kolory: {usedColors3}");
+            Console.WriteLine($"ColoredNeibourColorsCountNeighborCount - Uzyte kolory: {usedColors4}");
+            Console.WriteLine($"ColorsCountColoredNeibourNeighborCount - Uzyte kolory: {usedColors5}");
+            Console.WriteLine($"ColorsCountNeighborCountColoredNeibour - Uzyte kolory: {usedColors6}");
         }
     }
 }
