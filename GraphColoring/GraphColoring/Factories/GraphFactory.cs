@@ -41,7 +41,7 @@ namespace GraphColoring.Factories
 
             for (int i=1; i <= verticesCount; i++)
             {
-                for (int j=i+1; j <=verticesCount; j++)
+                for (int j=i+1; j <= verticesCount; j++)
                 {
                     result.Add(new Edge
                     {
@@ -50,6 +50,25 @@ namespace GraphColoring.Factories
                     });
                 }
             }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Just for tests (full graph)
+        /// </summary>
+        /// <param name="verticesCount"></param>
+        /// <returns>List of edges</returns>
+        public static List<Edge> CreateEdgesForSampleGraph()
+        {
+            var result = new List<Edge>();
+
+            result.Add(new Edge { Vertex1Name = 1, Vertex2Name = 3 });
+            result.Add(new Edge { Vertex1Name = 1, Vertex2Name = 5 });
+            result.Add(new Edge { Vertex1Name = 2, Vertex2Name = 3 });
+            result.Add(new Edge { Vertex1Name = 2, Vertex2Name = 5 });
+            result.Add(new Edge { Vertex1Name = 3, Vertex2Name = 4 });
+            result.Add(new Edge { Vertex1Name = 4, Vertex2Name = 5 });
 
             return result;
         }

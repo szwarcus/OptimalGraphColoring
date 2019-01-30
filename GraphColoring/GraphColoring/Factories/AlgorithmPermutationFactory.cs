@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GraphColoring.Enums;
 using GraphColoring.Helpers;
 using GraphColoring.Models;
@@ -9,23 +10,34 @@ namespace GraphColoring.Factories
     {
         public static int GetUsedColorsByPermutation(PermutationType permutationType, List<Edge> edges, int vertexCount = 100)
         {
+            var graph = GraphFactory.Create(edges, vertexCount);
+            var cloneGraph = graph.ToList();
+
             switch (permutationType)
             {
                 case PermutationType.ColoredNeibourColorsCountNeighborCount:
-                    return PermutationAlgorithmsHelper.ColoredNeibourColorsCountNeighborCount(edges, vertexCount);
+                    PermutationAlgorithmsHelper.ColoredNeibourColorsCountNeighborCount(cloneGraph);
+                    break;
                 case PermutationType.ColoredNeibourNeighborCountColorsCount:
-                    return PermutationAlgorithmsHelper.ColoredNeibourNeighborCountColorsCount(edges, vertexCount);
+                    PermutationAlgorithmsHelper.ColoredNeibourNeighborCountColorsCount(cloneGraph);
+                    break;
                 case PermutationType.ColorsCountColoredNeibourNeighborCount:
-                    return PermutationAlgorithmsHelper.ColorsCountColoredNeibourNeighborCount(edges, vertexCount);
+                    PermutationAlgorithmsHelper.ColorsCountColoredNeibourNeighborCount(cloneGraph);
+                    break;
                 case PermutationType.ColorsCountNeighborCountColoredNeibour:
-                    return PermutationAlgorithmsHelper.ColorsCountNeighborCountColoredNeibour(edges, vertexCount);
+                    PermutationAlgorithmsHelper.ColorsCountNeighborCountColoredNeibour(cloneGraph);
+                    break;
                 case PermutationType.NeighborCountColoredNeibourColorsCount:
-                    return PermutationAlgorithmsHelper.NeighborCountColoredNeibourColorsCount(edges, vertexCount);
+                    PermutationAlgorithmsHelper.NeighborCountColoredNeibourColorsCount(cloneGraph);
+                    break;
                 case PermutationType.NeighborCountColorsCountColoredNeibour:
-                    return PermutationAlgorithmsHelper.NeighborCountColorsCountColoredNeibour(edges, vertexCount);
+                    PermutationAlgorithmsHelper.NeighborCountColorsCountColoredNeibour(cloneGraph);
+                    break;
                 default:
-                    return -1;
+                    break;
             }
+
+            return graph.Max(vertex => vertex.Color);
         }
     }
 }

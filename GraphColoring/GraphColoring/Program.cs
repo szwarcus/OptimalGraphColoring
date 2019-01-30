@@ -8,25 +8,26 @@ namespace GraphColoring
 {
     class Program
     {
-        private static int _vertexCount = 100;
+        private static int _vertexCount = 5;
 
         static void Main(string[] args)
         {
-            var edges = GraphFactory.CreateEdgesForRandomGraph(_vertexCount);
+            //var edges = GraphFactory.CreateEdgesForRandomGraph(_vertexCount);
+            var edges = GraphFactory.CreateEdgesForSampleGraph();
 
-            RunAllPermutations(edges);
+            RunAllPermutations(edges, _vertexCount);
 
             Console.ReadKey();
         }
 
-        private static void RunAllPermutations(List<Edge> edges)
+        private static void RunAllPermutations(List<Edge> edges, int vertexCount)
         {
-            var usedColors = AlgorithmPermutationFactory.GetUsedColorsByPermutation(PermutationType.NeighborCountColoredNeibourColorsCount, edges, _vertexCount);
-            var usedColors2 = AlgorithmPermutationFactory.GetUsedColorsByPermutation(PermutationType.NeighborCountColorsCountColoredNeibour, edges, _vertexCount);
-            var usedColors3 = AlgorithmPermutationFactory.GetUsedColorsByPermutation(PermutationType.ColoredNeibourNeighborCountColorsCount, edges, _vertexCount);
-            var usedColors4 = AlgorithmPermutationFactory.GetUsedColorsByPermutation(PermutationType.ColoredNeibourColorsCountNeighborCount, edges, _vertexCount);
-            var usedColors5 = AlgorithmPermutationFactory.GetUsedColorsByPermutation(PermutationType.ColorsCountColoredNeibourNeighborCount, edges, _vertexCount);
-            var usedColors6 = AlgorithmPermutationFactory.GetUsedColorsByPermutation(PermutationType.ColorsCountNeighborCountColoredNeibour, edges, _vertexCount);
+            var usedColors = AlgorithmPermutationFactory.GetUsedColorsByPermutation(PermutationType.NeighborCountColoredNeibourColorsCount, edges, vertexCount);
+            var usedColors2 = AlgorithmPermutationFactory.GetUsedColorsByPermutation(PermutationType.NeighborCountColorsCountColoredNeibour, edges, vertexCount);
+            var usedColors3 = AlgorithmPermutationFactory.GetUsedColorsByPermutation(PermutationType.ColoredNeibourNeighborCountColorsCount, edges, vertexCount);
+            var usedColors4 = AlgorithmPermutationFactory.GetUsedColorsByPermutation(PermutationType.ColoredNeibourColorsCountNeighborCount, edges, vertexCount);
+            var usedColors5 = AlgorithmPermutationFactory.GetUsedColorsByPermutation(PermutationType.ColorsCountColoredNeibourNeighborCount, edges, vertexCount);
+            var usedColors6 = AlgorithmPermutationFactory.GetUsedColorsByPermutation(PermutationType.ColorsCountNeighborCountColoredNeibour, edges, vertexCount);
 
             Console.WriteLine($"NeighborCountColoredNeibourColorsCount - Uzyte kolory: {usedColors}");
             Console.WriteLine($"NeighborCountColorsCountColoredNeibour - Uzyte kolory: {usedColors2}");
