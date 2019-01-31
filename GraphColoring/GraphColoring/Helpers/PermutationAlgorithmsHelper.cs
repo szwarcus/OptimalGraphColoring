@@ -15,50 +15,63 @@ namespace GraphColoring.Helpers
         /// </summary>
         /// <param name="graph">Graf reprezentowany przez liczbę wszystkich wierzchołków</param>
         /// <returns>Pokolorowane wierzchołki oraz 1 jeśli wszystkie wierzchołki zostały pomalowane. 0 jeśli jakiś jest niepomalowany.</returns>
-        public static int NeighborCountColoredNeibourColorsCount(List<Vertex> graph)
+        public static void NeighborCountColoredNeibourColorsCount(List<Vertex> graph)
         {
-            // koloruje graf algorytmem zależnym od ilości sąsiadów do momentu "remisu"
-            var verticesInTie = ColorByNeighborCountToTie(graph);
+            Vertex vertex = null;
+            var sortedByNeighbourCount = graph.OrderByDescending(x => x.Neighbors.Count).ToList();
 
-            // nie było momentu remisu i kończę
-            if (verticesInTie.Count == 0)
+            // koloruje wszystkie wierzchołki
+            for (int i=0; i < graph.Count; i++)
             {
-                return 1;
-            }
+                vertex = sortedByNeighbourCount[i];
+                if (vertex.Color != 0)
+                {
+                    continue;
+                }
 
-            // koloruje jeden z wierzchołków zależny od ilości pokolorowanych sąsiadów
-            var coloredVertex = ColorByColoredNeighborCount(verticesInTie);
+                var verticesInTie = new List<Vertex>();
 
-            // udało się pomalować jeden wierzchołek i rekurencyjnie robimy tą funkcję jeszcze raz
-            if (coloredVertex != null)
-            {
-                graph.Remove(coloredVertex);
-                return NeighborCountColoredNeibourColorsCount(graph);
-            }
+                // szukam wierzchołki w remisie
+                for (int j=i+1; j < graph.Count; j++)
+                {
+                    if (vertex.Neighbors.Count == sortedByNeighbourCount[j].Neighbors.Count)
+                    {
+                        verticesInTie.Add(sortedByNeighbourCount[j]);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
 
-            // koloruje wierzchołki, które były jeszcze w remisie
-            coloredVertex = ColorByDiffColorsInNeighborhood(verticesInTie);
-
-            // udało się pomalować jeden wierzchołek i rekurencyjnie robimy tą funkcję jeszcze raz
-            if (coloredVertex != null)
-            {
-                graph.Remove(coloredVertex);
-                return NeighborCountColoredNeibourColorsCount(graph);
-            }
-
-            // nie udało się pomalować ani jednego wierzchołka, więc koloruję pierwszego niepomalowanego
-            for (int i=0; i < verticesInTie.Count; i++)
-            {
-                var vertex = verticesInTie[i];
-                if (vertex.Color == 0)
+                // jesli nie ma remisu, to maluj i spojrz na kolejny wierzcholek
+                if (verticesInTie.Count == 0)
                 {
                     PaintHelper.PaintVertex(vertex);
-                    graph.Remove(vertex);
-                    return NeighborCountColoredNeibourColorsCount(graph);
+                    continue;
                 }
-            }
 
-            return 0;
+                // jesli byl remis to dodaj tez ten wierzcholek
+                verticesInTie.Add(vertex);
+
+                var coloredVertex = ColorByColoredNeighborCount(verticesInTie);
+                
+                // jesli wierzcholek pomalowany to spojrz na kolejny
+                if (coloredVertex != null)
+                {
+                    continue;
+                }
+
+                coloredVertex = ColorByDiffColorsInNeighborhood(verticesInTie);
+
+                // jesli wierzcholek pomalowany to spojrz na kolejny
+                if (coloredVertex != null)
+                {
+                    continue;
+                }
+
+                PaintHelper.PaintVertex(vertex);
+            }
         }
 
         /// <summary>
@@ -68,49 +81,63 @@ namespace GraphColoring.Helpers
         /// </summary>
         /// <param name="graph">Graf reprezentowany przez liczbę wszystkich wierzchołków</param>
         /// <returns>Pokolorowane wierzchołki oraz 1 jeśli wszystkie wierzchołki zostały pomalowane. 0 jeśli jakiś jest niepomalowany.</returns>
-        public static int NeighborCountColorsCountColoredNeibour(List<Vertex> graph)
+        public static void NeighborCountColorsCountColoredNeibour(List<Vertex> graph)
         {
-            // koloruje graf algorytmem zależnym od ilości sąsiadów do momentu "remisu"
-            var verticesInTie = ColorByNeighborCountToTie(graph);
+            Vertex vertex = null;
+            var sortedByNeighbourCount = graph.OrderByDescending(x => x.Neighbors.Count).ToList();
 
-            // nie było momentu remisu i kończę
-            if (verticesInTie.Count == 0)
+            // koloruje wszystkie wierzchołki
+            for (int i = 0; i < graph.Count; i++)
             {
-                return 1;
-            }
+                vertex = sortedByNeighbourCount[i];
+                if (vertex.Color != 0)
+                {
+                    continue;
+                }
 
-            // koloruje wierzchołki w remisie
-            var coloredVertex = ColorByDiffColorsInNeighborhood(verticesInTie);
+                var verticesInTie = new List<Vertex>();
 
-            // udało się pomalować jeden wierzchołek i rekurencyjnie robimy tą funkcję jeszcze raz
-            if (coloredVertex != null)
-            {
-                graph.Remove(coloredVertex);
-                return NeighborCountColorsCountColoredNeibour(graph);
-            }
+                // szukam wierzchołki w remisie
+                for (int j = i + 1; j < graph.Count; j++)
+                {
+                    if (vertex.Neighbors.Count == sortedByNeighbourCount[j].Neighbors.Count)
+                    {
+                        verticesInTie.Add(sortedByNeighbourCount[j]);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
 
-            // koloruje wierzchołki, które były jeszcze w remisie
-            coloredVertex = ColorByColoredNeighborCount(verticesInTie);
-
-            if (coloredVertex != null)
-            {
-                graph.Remove(coloredVertex);
-                return NeighborCountColorsCountColoredNeibour(graph);
-            }
-
-            // nie udało się pomalować ani jednego wierzchołka, więc koloruję pierwszego niepomalowanego
-            for (int i = 0; i < verticesInTie.Count; i++)
-            {
-                var vertex = verticesInTie[i];
-                if (vertex.Color == 0)
+                // jesli nie ma remisu, to maluj i spojrz na kolejny wierzcholek
+                if (verticesInTie.Count == 0)
                 {
                     PaintHelper.PaintVertex(vertex);
-                    graph.Remove(vertex);
-                    return NeighborCountColorsCountColoredNeibour(graph);
+                    continue;
                 }
-            }
 
-            return 0;
+                // jesli byl remis to dodaj tez ten wierzcholek
+                verticesInTie.Add(vertex);
+                
+                var coloredVertex = ColorByDiffColorsInNeighborhood(verticesInTie);
+
+                // jesli wierzcholek pomalowany to spojrz na kolejny
+                if (coloredVertex != null)
+                {
+                    continue;
+                }
+
+                coloredVertex = ColorByColoredNeighborCount(verticesInTie);
+
+                // jesli wierzcholek pomalowany to spojrz na kolejny
+                if (coloredVertex != null)
+                {
+                    continue;
+                }
+
+                PaintHelper.PaintVertex(vertex);
+            }
         }
 
         /// <summary>
@@ -347,16 +374,16 @@ namespace GraphColoring.Helpers
                 return vertices;
             }
 
-            var sortedGraphByNeighborsCount = vertices.OrderByDescending(vertex => vertex.Neighbors.Count).ToList();
+            vertices = vertices.OrderByDescending(vertex => vertex.Neighbors.Count).ToList();
 
-            if (sortedGraphByNeighborsCount[0].Neighbors.Count == sortedGraphByNeighborsCount[1].Neighbors.Count)
+            if (vertices[0].Neighbors.Count == vertices[1].Neighbors.Count)
             {
-                var countToCompare = sortedGraphByNeighborsCount[0].Neighbors.Count;
+                var countToCompare = vertices[0].Neighbors.Count;
                 return vertices.Where(vertex => vertex.Neighbors.Count == countToCompare).ToList();
             }
 
-            PaintHelper.PaintVertex(sortedGraphByNeighborsCount[0]);
-            vertices.Remove(sortedGraphByNeighborsCount[0]);
+            PaintHelper.PaintVertex(vertices[0]);
+            vertices.Remove(vertices[0]);
             return ColorByNeighborCountToTie(vertices);
         }
 
@@ -387,18 +414,18 @@ namespace GraphColoring.Helpers
             });
 
             //listę wierzchołków sortuję ich po ilości pokolorowanych sąsiadów
-            var sortedGraphByColoredNeighborsCount = vertices.OrderByDescending(vertex => vertex.ColoredNeighbors)
-                                                             .ToList();
+            vertices = vertices.OrderByDescending(vertex => vertex.ColoredNeighbors)
+                       .ToList();
 
             // jest jakiś "remis"
-            if (sortedGraphByColoredNeighborsCount[0].ColoredNeighbors == sortedGraphByColoredNeighborsCount[1].ColoredNeighbors)
+            if (vertices[0].ColoredNeighbors == vertices[1].ColoredNeighbors)
             {
-                var countToCompare = sortedGraphByColoredNeighborsCount[0].ColoredNeighbors;
+                var countToCompare = vertices[0].ColoredNeighbors;
                 return vertices.Where(vertex => vertex.ColoredNeighbors == countToCompare).ToList();
             }
 
-            PaintHelper.PaintVertex(sortedGraphByColoredNeighborsCount[0]);
-            vertices.Remove(sortedGraphByColoredNeighborsCount[0]);
+            PaintHelper.PaintVertex(vertices[0]);
+            vertices.Remove(vertices[0]);
             return ColorByColoredNeighborCountToTie(vertices);
         }
 
@@ -436,18 +463,18 @@ namespace GraphColoring.Helpers
                 });
             });
 
-            var sortedGraphByUsedColorsInNeighborhood = vertices.OrderByDescending(vertex => vertex.UsedColorsInNeighborhood.Count)
-                                                                .ToList();
+            vertices = vertices.OrderByDescending(vertex => vertex.UsedColorsInNeighborhood.Count)
+                               .ToList();
 
             // jeśli jest jakiś remis
-            if (sortedGraphByUsedColorsInNeighborhood[0].UsedColorsInNeighborhood.Count == sortedGraphByUsedColorsInNeighborhood[1].UsedColorsInNeighborhood.Count)
+            if (vertices[0].UsedColorsInNeighborhood.Count == vertices[1].UsedColorsInNeighborhood.Count)
             {
-                var countToCompare = sortedGraphByUsedColorsInNeighborhood[0].UsedColorsInNeighborhood.Count;
+                var countToCompare = vertices[0].UsedColorsInNeighborhood.Count;
                 return vertices.Where(vertex => vertex.UsedColorsInNeighborhood.Count == countToCompare).ToList();
             }
 
-            PaintHelper.PaintVertex(sortedGraphByUsedColorsInNeighborhood[0]);
-            vertices.Remove(sortedGraphByUsedColorsInNeighborhood[0]);
+            PaintHelper.PaintVertex(vertices[0]);
+            vertices.Remove(vertices[0]);
             return ColorByDiffColorsInNeighborhoodToTie(vertices);
         }
 
@@ -465,18 +492,18 @@ namespace GraphColoring.Helpers
                 throw new Exception("Nieprawdidłowa lista sąsiadów");
             }
 
-            var sortedGraphByNeighorsCount = vertices.OrderByDescending(vertex => vertex.Neighbors.Count).ToList();
+            vertices = vertices.OrderByDescending(vertex => vertex.Neighbors.Count).ToList();
 
-            if (sortedGraphByNeighorsCount[0].Neighbors.Count == sortedGraphByNeighorsCount[1].Neighbors.Count)
+            if (vertices[0].Neighbors.Count == vertices[1].Neighbors.Count)
             {
-                var valueToCompare = sortedGraphByNeighorsCount[0].Neighbors.Count;
+                var valueToCompare = vertices[0].Neighbors.Count;
 
                 vertices = vertices.Where(vertex => vertex.Neighbors.Count == valueToCompare).ToList();
 
                 return coloredVertex;
             }
 
-            coloredVertex = sortedGraphByNeighorsCount[0];
+            coloredVertex = vertices[0];
 
             PaintHelper.PaintVertex(coloredVertex);
 
@@ -504,20 +531,20 @@ namespace GraphColoring.Helpers
             });
 
             //listę wierzchołków sortuję ich po ilości pokolorowanych sąsiadów
-            var sortedGraphByColoredNeighborsCount = vertices.OrderByDescending(vertex => vertex.ColoredNeighbors)
-                                                             .ToList();
+            vertices = vertices.OrderByDescending(vertex => vertex.ColoredNeighbors)
+                               .ToList();
 
             // nadal jest jakiś remis
-            if (sortedGraphByColoredNeighborsCount[0].ColoredNeighbors == sortedGraphByColoredNeighborsCount[1].ColoredNeighbors)
+            if (vertices[0].ColoredNeighbors == vertices[1].ColoredNeighbors)
             {
-                var valueToCompare = sortedGraphByColoredNeighborsCount[0].ColoredNeighbors;
+                var valueToCompare = vertices[0].ColoredNeighbors;
 
                 vertices = vertices.Where(vertex => vertex.ColoredNeighbors == valueToCompare).ToList();
 
                 return coloredVertex;
             }
 
-            coloredVertex = sortedGraphByColoredNeighborsCount[0];
+            coloredVertex = vertices[0];
 
             PaintHelper.PaintVertex(coloredVertex);
 
@@ -547,19 +574,19 @@ namespace GraphColoring.Helpers
                 });
             });
 
-            var sortedGraphByUsedColorsInNeighborhood = vertices.OrderByDescending(vertex => vertex.UsedColorsInNeighborhood.Count)
-                                                                .ToList();
+            vertices = vertices.OrderByDescending(vertex => vertex.UsedColorsInNeighborhood.Count)
+                               .ToList();
 
-            if (sortedGraphByUsedColorsInNeighborhood[0].UsedColorsInNeighborhood.Count == sortedGraphByUsedColorsInNeighborhood[1].UsedColorsInNeighborhood.Count)
+            if (vertices[0].UsedColorsInNeighborhood.Count == vertices[1].UsedColorsInNeighborhood.Count)
             {
-                var valueToCompare = sortedGraphByUsedColorsInNeighborhood[0].UsedColorsInNeighborhood.Count;
+                var valueToCompare = vertices[0].UsedColorsInNeighborhood.Count;
 
                 vertices = vertices.Where(vertex => vertex.UsedColorsInNeighborhood.Count == valueToCompare).ToList();
 
                 return coloredVertex;
             }
 
-            coloredVertex = sortedGraphByUsedColorsInNeighborhood[0];
+            coloredVertex = vertices[0];
 
             PaintHelper.PaintVertex(coloredVertex);
 
