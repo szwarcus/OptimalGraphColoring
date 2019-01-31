@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GraphColoring.Enums;
 using GraphColoring.Helpers;
@@ -11,6 +12,12 @@ namespace GraphColoring.Factories
         public static int GetUsedColorsByPermutation(PermutationType permutationType, List<Edge> edges, int vertexCount = 100)
         {
             var graph = GraphFactory.Create(edges, vertexCount);
+            bool isConnected= graph.Any(n => n.Neighbors.Count == 0);
+            if(!isConnected)
+            {
+                Console.WriteLine("Graph is not connected please check parameters for creating graph");
+                return -1;
+            }
             var cloneGraph = graph.ToList();
 
             switch (permutationType)

@@ -8,12 +8,13 @@ namespace GraphColoring
 {
     class Program
     {
-        private static int _vertexCount = 5;
+        private static int _vertexCount = 100;
 
         static void Main(string[] args)
         {
-            //var edges = GraphFactory.CreateEdgesForRandomGraph(_vertexCount);
-            var edges = GraphFactory.CreateEdgesForSampleGraph();
+           // var edges = GraphFactory.CreateEdgesForRandomGraph(_vertexCount);
+            var edges = GraphFactory.CreateRandomGraph(_vertexCount, 5, 2, 8);
+            //var edges = GraphFactory.CreateEdgesForSampleGraph();
 
             RunAllPermutations(edges, _vertexCount);
 

@@ -347,16 +347,16 @@ namespace GraphColoring.Helpers
                 return vertices;
             }
 
-            var sortedGraphByNeighorsCount = vertices.OrderByDescending(vertex => vertex.Neighbors.Count).ToList();
+            var sortedGraphByNeighborsCount = vertices.OrderByDescending(vertex => vertex.Neighbors.Count).ToList();
 
-            if (sortedGraphByNeighorsCount[0].Neighbors.Count == sortedGraphByNeighorsCount[1].Neighbors.Count)
+            if (sortedGraphByNeighborsCount[0].Neighbors.Count == sortedGraphByNeighborsCount[1].Neighbors.Count)
             {
-                var countToCompare = sortedGraphByNeighorsCount[0].Neighbors.Count;
+                var countToCompare = sortedGraphByNeighborsCount[0].Neighbors.Count;
                 return vertices.Where(vertex => vertex.Neighbors.Count == countToCompare).ToList();
             }
 
-            PaintHelper.PaintVertex(sortedGraphByNeighorsCount[0]);
-            vertices.Remove(sortedGraphByNeighorsCount[0]);
+            PaintHelper.PaintVertex(sortedGraphByNeighborsCount[0]);
+            vertices.Remove(sortedGraphByNeighborsCount[0]);
             return ColorByNeighborCountToTie(vertices);
         }
 
@@ -532,11 +532,7 @@ namespace GraphColoring.Helpers
         private static Vertex ColorByDiffColorsInNeighborhood(List<Vertex> vertices)
         {
             Vertex coloredVertex = null;
-         
-            if (vertices.Count < 2)
-            {
-                throw new Exception("Nieprawdidłowa lista sąsiadów");
-            }
+
 
             // liczymy wśród niepomalowanych wierzchołków liczbę użytych kolorów w ich sąsiedztwie
             vertices.ForEach(vertex =>

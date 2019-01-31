@@ -9,5 +9,9 @@ namespace GraphColoring.Models
         public List<int> UsedColorsInNeighborhood = new List<int>();
         public int ColoredNeighbors = 0; 
         public List<Vertex> Neighbors { get; set; } = new List<Vertex>();
+        public Vertex(int _name)
+        {
+            Name = _name;
+        }
     }
 }

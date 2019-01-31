@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GraphColoring.Models;
 
@@ -12,7 +13,7 @@ namespace GraphColoring.Factories
 
             for (int i=1; i <= verticesCount; i++)
             {
-                result.Add(new Vertex { Name = i });
+                result.Add( new Vertex( i ));
             }
 
             edges.ForEach(edge =>
@@ -55,7 +56,93 @@ namespace GraphColoring.Factories
         }
 
         /// <summary>
-        /// Just for tests (full graph)
+        /// Generowanie losowego grafu
+        /// </summary>
+        /// <param name="verticesCount">Ilość wierzchołków w grafie</param>
+        /// <param name="groupCount">Ilość grup w grafie</param>
+        /// <param name="connectionsInGroup">Ilość połączeń w grupie wychodzące z każdego wierzchołka w grupie</param>
+        /// <param name="connectionsBetweenGroups"></param>
+        /// <returns>Liste krawędzi losowych</returns>
+        public static List<Edge> CreateRandomGraph(int verticesCount, int groupCount, int connectionsInGroup, int connectionsBetweenGroups)
+        {
+            List<Vertex> vertices = new List<Vertex>();
+            var result = new List<Edge>();
+            for (int i = 0; i < verticesCount; i++)
+            {
+                vertices.Add(new Vertex(i));
+                
+            }
+            Random random = new Random();
+            int interval = (verticesCount / groupCount);
+            int random1 = 0;
+            int random2 = 0;
+            for (int i = 0; i < groupCount; i++)
+            {
+                Console.WriteLine("Group "+i);
+                for (int j = 0; j < interval; j++)
+                {
+                    random2 = i * interval + j;
+                    while (vertices[random2].Neighbors.Count < connectionsInGroup)
+                    {
+                        random1 = random.Next(i * interval, i * interval + interval);
+
+                        if (!vertices[random2].Neighbors.Contains(vertices[random1]) && (random2) != random1)
+                        {
+                            result.Add(new Edge
+                            {
+                                Vertex1Name = random2,
+                                Vertex2Name = random1
+                            });
+                            vertices[random2].Neighbors.Add(vertices.First(x => x.Name == random1));
+                            vertices[random1].Neighbors.Add(vertices.First(x => x.Name == random2));
+                            Console.WriteLine("Connecting vertice " + vertices[random2].Name + "  =>  " + vertices[random1].Name);
+                        }
+
+                    }
+                }
+            }
+            List<int> groupUsed = new List<int>();
+            int group1 = random.Next(0, groupCount);
+
+            List<Tuple<int,int>> connectedVectors = new List<Tuple<int,int>>();
+            while (groupUsed.Count != groupCount)
+            {
+                int group2 = random.Next(0, groupCount);
+                if (group1 != group2 && !groupUsed.Contains(group1))
+                {
+                    Console.WriteLine("Connecting group " + group1 + " with group " + group2);
+               
+                    groupUsed.Add(group1);
+
+                    for (int j = 0; j < connectionsBetweenGroups; j++)
+                    {
+                        random1 = random.Next(group1 * interval, group1 * interval + interval);
+                        random2 = random.Next(group2 * interval, group2 * interval + interval);
+                        bool isRepeated=connectedVectors.Any(v => (v.Item1 == random1 && v.Item2==random2)|| (v.Item1 == random2 && v.Item2 == random1));
+                        if(isRepeated)
+                        {
+                            Console.WriteLine("Skipping this attempt " +random1+" => " +random2 +". Repeat detected!");
+                            j--;
+                            continue;
+                        }
+                        Console.WriteLine("Connecting vertice " + vertices[random1].Name + "  =>  " + vertices[random2].Name);
+                        result.Add(new Edge
+                        {
+                            Vertex1Name = random1,
+                            Vertex2Name = random2
+                        });
+                        connectedVectors.Add(new Tuple<int, int>(random1, random2));
+                        vertices[random1].Neighbors.Add(vertices.First(x => x.Name == random2));
+                        vertices[random2].Neighbors.Add(vertices.First(x => x.Name == random1));
+                    }
+                }
+                group1 = group2;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Just for tests 
         /// </summary>
         /// <param name="verticesCount"></param>
         /// <returns>List of edges</returns>
