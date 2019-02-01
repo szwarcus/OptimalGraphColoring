@@ -36,7 +36,10 @@ namespace GraphColoring.Helpers
                 {
                     if (vertex.Neighbors.Count == sortedByNeighbourCount[j].Neighbors.Count)
                     {
-                        verticesInTie.Add(sortedByNeighbourCount[j]);
+                        if (sortedByNeighbourCount[j].Color == 0)
+                        {
+                            verticesInTie.Add(sortedByNeighbourCount[j]);
+                        }
                     }
                     else
                     {
@@ -56,17 +59,27 @@ namespace GraphColoring.Helpers
 
                 var coloredVertex = ColorByColoredNeighborCount(verticesInTie);
                 
-                // jesli wierzcholek pomalowany to spojrz na kolejny
+                // jesli wierzcholek pomalowany
                 if (coloredVertex != null)
                 {
+                    // jesli pomalowany wierzcholek to inny wierzcholek niz ogladany i-ty wierzcholek, to trzeba obejrzec go jeszcze raz
+                    if (coloredVertex != vertex)
+                    {
+                        i--;
+                    }
                     continue;
                 }
 
                 coloredVertex = ColorByDiffColorsInNeighborhood(verticesInTie);
 
-                // jesli wierzcholek pomalowany to spojrz na kolejny
+                // jesli wierzcholek pomalowany
                 if (coloredVertex != null)
                 {
+                    // jesli pomalowany wierzcholek to inny wierzcholek niz ogladany i-ty wierzcholek, to trzeba obejrzec go jeszcze raz
+                    if (coloredVertex != vertex)
+                    {
+                        i--;
+                    }
                     continue;
                 }
 
@@ -102,7 +115,10 @@ namespace GraphColoring.Helpers
                 {
                     if (vertex.Neighbors.Count == sortedByNeighbourCount[j].Neighbors.Count)
                     {
-                        verticesInTie.Add(sortedByNeighbourCount[j]);
+                        if (sortedByNeighbourCount[j].Color == 0)
+                        {
+                            verticesInTie.Add(sortedByNeighbourCount[j]);
+                        }
                     }
                     else
                     {
@@ -119,20 +135,30 @@ namespace GraphColoring.Helpers
 
                 // jesli byl remis to dodaj tez ten wierzcholek
                 verticesInTie.Add(vertex);
-                
+
                 var coloredVertex = ColorByDiffColorsInNeighborhood(verticesInTie);
 
-                // jesli wierzcholek pomalowany to spojrz na kolejny
+                // jesli wierzcholek pomalowany
                 if (coloredVertex != null)
                 {
+                    // jesli pomalowany wierzcholek to inny wierzcholek niz ogladany i-ty wierzcholek, to trzeba obejrzec go jeszcze raz
+                    if (coloredVertex != vertex)
+                    {
+                        i--;
+                    }
                     continue;
                 }
 
                 coloredVertex = ColorByColoredNeighborCount(verticesInTie);
 
-                // jesli wierzcholek pomalowany to spojrz na kolejny
+                // jesli wierzcholek pomalowany
                 if (coloredVertex != null)
                 {
+                    // jesli pomalowany wierzcholek to inny wierzcholek niz ogladany i-ty wierzcholek, to trzeba obejrzec go jeszcze raz
+                    if (coloredVertex != vertex)
+                    {
+                        i--;
+                    }
                     continue;
                 }
 

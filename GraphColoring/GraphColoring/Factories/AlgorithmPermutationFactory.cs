@@ -44,6 +44,7 @@ namespace GraphColoring.Factories
                     break;
             }
 
+            var notColoredVertices = graph.Where(vertex => vertex.Color == 0).ToList();
             return graph.Max(vertex => vertex.Color);
         }
     }
