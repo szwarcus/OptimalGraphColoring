@@ -12,8 +12,8 @@ namespace GraphColoring.Factories
         public static int GetUsedColorsByPermutation(PermutationType permutationType, List<Edge> edges, int vertexCount = 100)
         {
             var graph = GraphFactory.Create(edges, vertexCount);
-            bool isConnected= graph.Any(n => n.Neighbors.Count == 0);
-            if(!isConnected)
+            var isConnected= graph.FirstOrDefault(n => n.Neighbors.Count == 0);
+            if(isConnected!=null)
             {
                 Console.WriteLine("Graph is not connected please check parameters for creating graph");
                 return -1;
@@ -45,6 +45,11 @@ namespace GraphColoring.Factories
             }
 
             var notColoredVertices = graph.Where(vertex => vertex.Color == 0).ToList();
+            List<int> dfspath = GraphFactory.DFS(graph);
+            if(dfspath.Count!=graph.Count)
+            {
+                Console.WriteLine("DFS nieudany, prosze o dobranie parametrow");
+            }
             return graph.Max(vertex => vertex.Color);
         }
     }

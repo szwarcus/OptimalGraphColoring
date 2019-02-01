@@ -11,7 +11,7 @@ namespace GraphColoring.Factories
         {
             var result = new List<Vertex>();
 
-            for (int i=1; i <= verticesCount; i++)
+            for (int i=0; i < verticesCount; i++)
             {
                 result.Add( new Vertex( i ));
             }
@@ -138,6 +138,22 @@ namespace GraphColoring.Factories
                 }
                 group1 = group2;
             }
+            //Check if any left empty
+            var emptyVertices = vertices.FindAll(vertex => vertex.Neighbors.Count == 0);
+            if (emptyVertices.Count != 0)
+            {
+                foreach (var vertex in emptyVertices)
+                {
+                    var neighbour = vertices.FirstOrDefault(x => x.Neighbors.Count > 5);
+                    result.Add(new Edge
+                    {
+                        Vertex1Name = vertex.Name,
+                        Vertex2Name = neighbour.Name
+                    });
+                    vertices[vertex.Name].Neighbors.Add(vertices.First(x => x.Name == random2));
+                    vertices[neighbour.Name].Neighbors.Add(vertices.First(x => x.Name == vertex.Name));
+                }
+            }
             return result;
         }
 
@@ -158,6 +174,39 @@ namespace GraphColoring.Factories
             result.Add(new Edge { Vertex1Name = 4, Vertex2Name = 5 });
 
             return result;
+        }
+
+        /// <summary>
+        /// Depth first search
+        /// </summary>
+        /// <param name="graph">List of vertices as a graph</param>
+        /// <returns></returns>
+        public static List<int> DFS(List<Vertex> graph)
+        {
+            var visited = new List<int>();
+            graph.OrderBy(x => x.Name);
+            int start = graph.FirstOrDefault().Name;
+            if (graph.FirstOrDefault(vertice => vertice.Name == start) == null)
+                return visited;
+
+            var stack = new Stack<int>();
+            stack.Push(start);
+
+            while (stack.Count > 0)
+            {
+                var vertex = stack.Pop();
+
+                if (visited.Contains(vertex))
+                    continue;
+
+                visited.Add(vertex);
+
+                foreach (var neighbor in graph.FirstOrDefault(n => n.Name == vertex).Neighbors)
+                    if (!visited.Contains(neighbor.Name))
+                        stack.Push(neighbor.Name);
+            }
+
+            return visited;
         }
     }
 }
